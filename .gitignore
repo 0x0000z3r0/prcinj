@@ -1,0 +1,9 @@
+*.o
+*.ko
+*.order
+*.cmd
+*.mod
+*.mod.c
+*.symvers
+prcinj_demo
+prcinj_client
