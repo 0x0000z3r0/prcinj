@@ -4,14 +4,13 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 
-#define PRCINJ_DEV_NAME 	"prcinj"
-#define PRCINJ_IOCTL_PROT	_IOW('9', 1, struct prcinj_req)
+#define PRCINJ_DEV_NAME  "prcinj"
+#define PRCINJ_IOCTL_INJ _IOW('9', 1, struct prcinj_req)
 
 struct prcinj_req {
-	pid_t 	pid;
-	void	*addr;
-	size_t	len;
-	int	prot;
+	pid_t 		pid;
+	unsigned char 	*shell;
+	size_t		len;
 };
 
 #endif

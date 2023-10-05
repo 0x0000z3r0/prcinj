@@ -10,7 +10,7 @@
 int 
 main(int argc, char *argv[])
 {
-	if (argc < 5) {
+	if (argc < 2) {
 		printf("ERR: missing arguments\n");
 		exit(1);
 	}
@@ -18,20 +18,28 @@ main(int argc, char *argv[])
 	int dev;
 	dev = open("/dev/" PRCINJ_DEV_NAME, 0);
 	if (dev < 0) {
-		perror("ERR: could not open the device\n");
+		perror("ERR: could not open the device");
 		exit(1);
 	}
 
+	unsigned char shell[] = {
+		0x00, 0x11, 0x22, 0x33,
+		0x44, 0x55, 0x66, 0x77,
+		0x88, 0x99, 0xAA, 0xBB,
+		0xCC, 0xDD, 0xEE, 0xFF,
+		'P', 'R', 'C', 'I', 'N', 'J'
+	};
+
 	struct prcinj_req req;
-	req.pid  = atoi(argv[1]);
-	req.addr = (void*)strtol(argv[2], NULL, 16);
-	req.len  = strtol(argv[3], NULL, 16);
-	req.prot = strtol(argv[4], NULL, 16);
+	req.pid   = atoi(argv[1]);
+	req.shell = shell;
+	req.len   = sizeof (shell);
 
 	int res;
-	res = ioctl(dev, PRCINJ_IOCTL_PROT, &req);
+	res = ioctl(dev, PRCINJ_IOCTL_INJ, &req);
 	if (res < 0) {
-		perror("ERR: ioctl failed");
+		printf("ERR: ioctl failed [res-%i]", res);
+		perror("");
 	}
 
 	close(dev);
